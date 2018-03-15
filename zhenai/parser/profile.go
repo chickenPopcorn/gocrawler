@@ -1,11 +1,11 @@
 package parser
 
 import (
+	"regexp"
+	"strconv"
+
 	"../../engine"
 	"../../model"
-	"regexp"
-
-	"strconv"
 )
 
 var ageRe = regexp.MustCompile(`<td><span class="label">年龄：</span>([0-9]+)岁</td>`)
@@ -18,13 +18,13 @@ var marriageRe = regexp.MustCompile(`<td><span class="label">婚况：</span>([^
 var educationRe = regexp.MustCompile(`<td><span class="label">学历：</span>([^<]+)</td>`)
 var occupationRe = regexp.MustCompile(`<td><span class="label">职业： </span>([^<]+)</td>`)
 var hukouRe = regexp.MustCompile(`<td><span class="label">籍贯：</span>([^<]+)</td>`)
-var carRe = regexp.MustCompile(`<td><span class="label">住房条件：</span><span field="">([^<]+)</span></td>`)
-var houseRe = regexp.MustCompile(`<td><span class="label">是否购车：</span><span field="">([^<]+)</span></td>`)
+var houseRe = regexp.MustCompile(`<td><span class="label">住房条件：</span><span field="">([^<]+)</span></td>`)
+var carRe = regexp.MustCompile(`<td><span class="label">是否购车：</span><span field="">([^<]+)</span></td>`)
 
-func ParseProfile(contents []byte) engine.ParseResult {
+func ParseProfile(contents []byte, name string) engine.ParseResult {
 	profile := model.Profile{}
 	age, err := strconv.Atoi(extractString(contents, ageRe))
-
+	profile.Name = name
 	if err == nil {
 		profile.Age = age
 	}
@@ -48,7 +48,6 @@ func ParseProfile(contents []byte) engine.ParseResult {
 	profile.Marriage = extractString(contents, marriageRe)
 	profile.Occupation = extractString(contents, occupationRe)
 	profile.Xinzuo = extractString(contents, xinzuoRe)
-	//profile.Name  = extractString(contents, xinzuoRe)*/
 
 	return engine.ParseResult{
 		Items: []interface{}{profile},

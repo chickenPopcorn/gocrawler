@@ -1,10 +1,12 @@
 package parser
 
 import (
-	"../../model"
-	"../parser"
+	"fmt"
 	"io/ioutil"
 	"testing"
+
+	"../../model"
+	"../parser"
 )
 
 func TestParseProfile(t *testing.T) {
@@ -14,7 +16,7 @@ func TestParseProfile(t *testing.T) {
 		panic(err)
 	}
 
-	result := parser.ParseProfile(contents)
+	result := parser.ParseProfile(contents, "西洋参")
 	if len(result.Items) != 1 {
 		t.Errorf("Result should contain 1 element; but was %v", result.Items)
 	}
@@ -22,7 +24,7 @@ func TestParseProfile(t *testing.T) {
 	profile := result.Items[0].(model.Profile)
 
 	expected := model.Profile{
-		Name:       "",
+		Name:       "西洋参",
 		Gender:     "男",
 		Age:        53,
 		Height:     170,
@@ -37,6 +39,7 @@ func TestParseProfile(t *testing.T) {
 		Car:        "未购车",
 	}
 
+	fmt.Printf("%v\n %v", expected, profile)
 	if profile != expected {
 		t.Errorf("epxected %v; but was %v", expected, profile)
 	}
